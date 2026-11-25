@@ -94,7 +94,7 @@ Part 2 resolves `active_source.json`, verifies the manifest SHA-256 and revalida
 - FDIC, [BankFind Suite API documentation](https://api.fdic.gov/banks/docs/), [financial field definitions](https://api.fdic.gov/banks/docs/risview_properties.yaml), [failure field definitions](https://api.fdic.gov/banks/docs/failure_properties.yaml), [institution field definitions](https://api.fdic.gov/banks/docs/institution_properties.yaml), and [bulk data](https://banks.data.fdic.gov/bankfind-suite/bulkData).
 - National Economics University, BFT65B final examination instructions and `fdic_download_starter.py` (course materials): dataset scope, field selection starting point, quarter-by-quarter API retrieval and completeness requirements.
 - Apache Arrow, [CSV documentation](https://arrow.apache.org/docs/python/csv.html), [Parquet documentation](https://arrow.apache.org/docs/python/parquet.html), [Dataset documentation](https://arrow.apache.org/docs/python/dataset.html); [pandas](https://pandas.pydata.org/docs/), [Polars](https://docs.pola.rs/), [Requests](https://requests.readthedocs.io/), [pytest](https://docs.pytest.org/), [Matplotlib](https://matplotlib.org/stable/).
-- OpenAI ChatGPT assisted in designing, writing and reviewing acquisition, storage experiments, financial data quality, event-policy tests, scalable processing experiments and documentation. Empirical results must be obtained by executing the pipeline, and the submitting researcher must independently verify the code, results and interpretation. Cite this assistance in the final report as required by the examination.
+- OpenAI ChatGPT assisted in designing, writing and reviewing acquisition, storage experiments, financial data quality, event-policy tests, scalable processing experiments, feature construction, temporal validation safeguards and documentation. Empirical results must be obtained by executing the pipeline, and the submitting researcher must independently verify the code, results and interpretation. Cite this assistance in the final report as required by the examination.
 
 
 ## Part 2 — Data Quality and Panel
@@ -125,3 +125,16 @@ python run_part3.py verify --workspace /path/to/workspace
 ```
 
 The controlled eight-column projection is measured at 1× (all observed rows), 5× and 10× (synthetic replicated histories with disjoint CERTs). Three analytical workloads compare pandas and Polars at all scales and PySpark on 1×. One additional Polars single-thread scenario per workload measures thread-count sensitivity. Full parity, timings, sampled process-tree RSS, optimized and physical plans, environment and staging evidence are saved under `processing_evidence/<run-id>/`. `active_processing.json` points to the verified evidence. Synthetic data remain in local scratch and are not model inputs. See [Part 3 protocol](docs/part3_protocol.md) for experiment design, memory and timing boundaries, Amdahl interpretation and cluster-decision limitations. Part 4 continues from the verified original Silver data. Sources: [Polars lazy optimizations](https://docs.pola.rs/user-guide/lazy/optimizations/), [Spark SQL performance tuning](https://spark.apache.org/docs/4.0.1/sql-performance-tuning.html), [PySpark installation](https://spark.apache.org/docs/4.0.1/api/python/getting_started/install.html), BFT65B course materials.
+
+## Part 4 — Feature Pipeline
+
+[Notebook 05: Feature Pipeline](https://colab.research.google.com/github/NguyenDuong0508/11230945/blob/main/notebooks/05_feature_pipeline_colab.ipynb) consumes the verified original Silver financial panel and dated event ledger. It builds the decision-quarter risk set using the latest available report under an explicit 90-day lag and two-quarter age cap. The Gold table contains 29 economically motivated raw predictors, a nullable four-quarter failure label, label reason and date/split metadata. Retrospective terminal classes, failure cost and synthetic benchmark rows are excluded from predictors.
+
+```bash
+python -m pip install -r requirements.txt
+python -m pytest -q
+python run_part4.py build --workspace /path/to/workspace
+python run_part4.py verify --workspace /path/to/workspace
+```
+
+The fixed training period ends in 2000Q4, validation covers 2002Q1–2006Q4, and the historical test covers 2008Q1–2014Q4; each intervening year is purged. The holdout gate requires at least 50 distinct represented failure CERTs within the test calendar. Quarters through 2025Q2 are built for accounting; post-test observations are not development data. Primary and zero-as-missing sensitivity preprocessors are fitted only on labelled training rows. Part 5 must refit preprocessing inside each chronological training fold, lock all choices on development and evaluate the test once. See [Part 4 protocol](docs/part4_protocol.md) for exact rules, feature definitions, limitations and workspace handoff. `active_features.json` points to `gold/<run-id>/`; never commit the Gold data or fitted artifacts. Sources: FDIC field definitions and reporting methodologies, BFT65B course materials, [scikit-learn pipelines and preprocessing](https://scikit-learn.org/stable/modules/compose.html).
