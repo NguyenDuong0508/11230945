@@ -94,7 +94,7 @@ Part 2 resolves `active_source.json`, verifies the manifest SHA-256 and revalida
 - FDIC, [BankFind Suite API documentation](https://api.fdic.gov/banks/docs/), [financial field definitions](https://api.fdic.gov/banks/docs/risview_properties.yaml), [failure field definitions](https://api.fdic.gov/banks/docs/failure_properties.yaml), [institution field definitions](https://api.fdic.gov/banks/docs/institution_properties.yaml), and [bulk data](https://banks.data.fdic.gov/bankfind-suite/bulkData).
 - National Economics University, BFT65B final examination instructions and `fdic_download_starter.py` (course materials): dataset scope, field selection starting point, quarter-by-quarter API retrieval and completeness requirements.
 - Apache Arrow, [CSV documentation](https://arrow.apache.org/docs/python/csv.html), [Parquet documentation](https://arrow.apache.org/docs/python/parquet.html), [Dataset documentation](https://arrow.apache.org/docs/python/dataset.html); [pandas](https://pandas.pydata.org/docs/), [Polars](https://docs.pola.rs/), [Requests](https://requests.readthedocs.io/), [pytest](https://docs.pytest.org/), [Matplotlib](https://matplotlib.org/stable/).
-- OpenAI ChatGPT assisted in designing, writing and reviewing acquisition, storage experiments, financial data quality, event-policy tests and documentation. Empirical results must be obtained by executing the pipeline, and the submitting researcher must independently verify the code, results and interpretation. Cite this assistance in the final report as required by the examination.
+- OpenAI ChatGPT assisted in designing, writing and reviewing acquisition, storage experiments, financial data quality, event-policy tests, scalable processing experiments and documentation. Empirical results must be obtained by executing the pipeline, and the submitting researcher must independently verify the code, results and interpretation. Cite this assistance in the final report as required by the examination.
 
 
 ## Part 2 — Data Quality and Panel
@@ -111,3 +111,17 @@ python run_part2.py verify --workspace /path/to/workspace
 Use the same workspace as Part 1; on Colab this is `/content/drive/MyDrive/11230945`. `active_panel.json` points to a verified `silver/<run-id>/` containing `panel/` (quarter-partitioned Parquet), `event_ledger.parquet`, `terminal_audit.parquet`, quality/evidence CSVs, figures and a manifest. Financial records are retained, reporting gaps are not filled, and the event and retrospective audit tables are kept separate. See [Part 2 protocol](docs/part2_protocol.md) for treatment rules, lag assumptions, capital and income sensitivity diagnostics, FDIC event definitions, limitations and the downstream interface. Part 3 and Part 4 resolve and verify the active Silver pointer; never use full-history terminal audit status as a blanket filter or historical predictor. No model split or final labels are created here.
 
 Additional sources: [FDIC Failures and Assistance definitions](https://banks.data.fdic.gov/bankfind-suite/failures/help); [FDIC Disclaimers and Methodologies](https://banks.data.fdic.gov/bankfind-suite/help?helpTopic=disclaimers-and-methodologies); [FDIC Community Banking Research Program](https://www.fdic.gov/community-banking-research-program) (CBLR reporting). These references motivate the event and reporting-regime policies documented in Part 2.
+
+
+## Part 3 — Scalable Processing
+
+[Notebook 04: Scalable Processing](https://colab.research.google.com/github/NguyenDuong0508/11230945/blob/main/notebooks/04_scalable_processing_colab.ipynb) reads the verified Silver pointer. Install Java 17 or later (set `JAVA_HOME` if required), then run:
+
+```bash
+python -m pip install -r requirements.txt
+python -m pytest -q
+python run_part3.py run --workspace /path/to/workspace --scratch /path/to/local/scratch
+python run_part3.py verify --workspace /path/to/workspace
+```
+
+The controlled eight-column projection is measured at 1× (all observed rows), 5× and 10× (synthetic replicated histories with disjoint CERTs). Three analytical workloads compare pandas and Polars at all scales and PySpark on 1×. One additional Polars single-thread scenario per workload measures thread-count sensitivity. Full parity, timings, sampled process-tree RSS, optimized and physical plans, environment and staging evidence are saved under `processing_evidence/<run-id>/`. `active_processing.json` points to the verified evidence. Synthetic data remain in local scratch and are not model inputs. See [Part 3 protocol](docs/part3_protocol.md) for experiment design, memory and timing boundaries, Amdahl interpretation and cluster-decision limitations. Part 4 continues from the verified original Silver data. Sources: [Polars lazy optimizations](https://docs.pola.rs/user-guide/lazy/optimizations/), [Spark SQL performance tuning](https://spark.apache.org/docs/4.0.1/sql-performance-tuning.html), [PySpark installation](https://spark.apache.org/docs/4.0.1/api/python/getting_started/install.html), BFT65B course materials.
