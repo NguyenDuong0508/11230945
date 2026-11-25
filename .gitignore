@@ -13,5 +13,9 @@ workspace/
 bronze/
 storage_evidence/
 benchmark_scratch/
+
 silver/
 active_panel.json
+processing_evidence/
+processing_scratch/
+active_processing.json
