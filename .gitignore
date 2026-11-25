@@ -1,0 +1,15 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ipynb_checkpoints/
+.venv/
+.env
+.DS_Store
+*.parquet
+*.csv
+*.zip
+*.jsonl
+workspace/
+bronze/
+storage_evidence/
+benchmark_scratch/
