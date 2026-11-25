@@ -1,3 +1,4 @@
+
 __pycache__/
 *.py[cod]
 .pytest_cache/
@@ -10,12 +11,18 @@ __pycache__/
 *.zip
 *.jsonl
 workspace/
+
 bronze/
 storage_evidence/
 benchmark_scratch/
 
 silver/
 active_panel.json
+
 processing_evidence/
 processing_scratch/
 active_processing.json
+
+gold/
+active_features.json
+*.joblib
