@@ -80,7 +80,7 @@ def test_benchmark_evidence_flow(tmp_path, monkeypatch):
     work.mkdir()
     preparation = {"source_manifest_sha256":"fixture-source", "formats":{f:{"bytes":100+i} for i,f in enumerate(FORMATS)}}
     monkeypatch.setattr(b,"verify_preparation",lambda _:preparation)
-    monkeypatch.setattr(b.im,"version",lambda _:"fixture")
+    monkeypatch.setattr(b, "im", SimpleNamespace(version=lambda _: "fixture"))
     original_run = b.subprocess.run
     def fake_worker(cmd,**kwargs):
         if "fdic_ews.worker" not in cmd:
