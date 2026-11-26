@@ -35,7 +35,7 @@ ROA peer deviation is calculated before outcomes are joined: the bank's ROA minu
 | 2008Q1–2014Q4 | Historical test |
 | 2015Q1–2025Q2 | Unused post-test audit |
 
-The early development period contains the banking stress of the late 1980s and early 1990s; the test covers the later crisis and recovery. Four-quarter purges separate the final development horizons from the next evaluation period. The test period is a retrospective historical holdout; it has been examined in exploratory research and is not a prospectively blind external sample. No test-performance evidence may guide feature, model or threshold choices in this evaluation. Part 4 checks split and label counts only; it does not score models or fit preprocessing on holdout data. The post-test panel is not an additional tuning set.
+The early development period contains the banking stress of the late 1980s and early 1990s; the test covers the later crisis and recovery. Four-quarter purges separate the final development horizons from the next evaluation period. The 2008–2014 test period is reserved as a chronological out-of-time holdout. No test-performance evidence is used to guide feature, model or threshold choices. Part 4 checks split and label counts only; it does not score models or fit preprocessing on holdout data. The post-test panel is not an additional tuning set. The retrospective design does not establish prospective performance.
 
 ## Training-only preprocessing and handoff
 
