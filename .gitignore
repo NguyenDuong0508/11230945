@@ -1,4 +1,5 @@
 
+# Python and notebook caches
 __pycache__/
 *.py[cod]
 .pytest_cache/
@@ -6,25 +7,35 @@ __pycache__/
 .venv/
 .env
 .DS_Store
+
+# Generated datasets and model artifacts
 *.parquet
 *.csv
 *.zip
 *.jsonl
+*.joblib
 workspace/
 
+# Part 1 — Acquisition and storage
 bronze/
 storage_evidence/
 benchmark_scratch/
+active_source.json
+pending_source.json
+active_storage.json
 
+# Part 2 — Data quality and panel
 silver/
 active_panel.json
 
+# Part 3 — Scalable processing
 processing_evidence/
 processing_scratch/
 active_processing.json
 
+# Part 4 — Feature pipeline
 gold/
 active_features.json
-*.joblib
 
+# Part 5 — Modelling and validation
 /modelling/
