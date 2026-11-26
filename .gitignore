@@ -26,3 +26,5 @@ active_processing.json
 gold/
 active_features.json
 *.joblib
+
+/modelling/
