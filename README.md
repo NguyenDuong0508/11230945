@@ -152,3 +152,17 @@ python run_part5.py verify --workspace /path/to/workspace
 ```
 
 See [Part 5 protocol](docs/part5_protocol.md) for the fixed folds, predictors, economic-loss assumptions, cost vintage gate and predeclared fallback, metrics, Spark demonstration and test controls. A workspace-wide `modelling/test_attempt.json` is created before historical-test rows are decoded. Do not remove this marker or regenerate upstream runs to repeat a test. A completed run can be inspected repeatedly through `verify`; a failed attempted test must be documented. The 2008–2014 historical test is retrospective, not a blind prospective external sample. No model, feature, cost assumption or threshold is selected using test scores. Keep the evidence, predictions and fitted models under the workspace, not in Git. Sources: [scikit-learn model evaluation](https://scikit-learn.org/stable/modules/model_evaluation.html), [LightGBM 4.6.0](https://lightgbm.readthedocs.io/en/v4.6.0/Parameters.html), [Spark ML pipelines](https://spark.apache.org/docs/4.0.1/ml-pipeline.html), FDIC Failures and Assistance and BFT65B course materials.
+
+## Part 6 — Conclusions and evidence synthesis
+
+[Notebook 08: Conclusions and Evidence Synthesis](https://colab.research.google.com/github/NguyenDuong0508/11230945/blob/main/notebooks/08_conclusions_colab.ipynb) reads the same completed workspace after Notebook 07 reports `VERIFIED`. It reconciles the stage identities, artifact hashes, benchmark summaries, quality and split counts, and fixed-policy test metrics. The notebook provides evidence for Q1–Q3, limitations, and a proposed Vietnamese supervisory adaptation. It does not acquire new data, change active pointers, rerun benchmarks, fit models, optimize thresholds or score the historical test. Run the complete offline test gate before synthesis. From the repository root:
+
+```bash
+python -m pip install -r requirements.txt
+python -m pytest -q
+python run_part6.py --workspace /path/to/workspace
+```
+
+The command prints aggregate evidence to standard output; there are no new workspace files. For read-only recomputation of saved model metrics, use `python run_part5.py verify --workspace /path/to/workspace`, not `evaluate`. Save the executed Notebook 08 with outputs at its original repository path. No raw data, predictions or fitted models belong in Git. See [Part 6 protocol](docs/part6_protocol.md) for the evidence contract, interpretation boundaries and Vietnamese adaptation requirements. The source references include BCBS risk-data aggregation and supervision principles and Vietnamese credit-institution legislation; the proposed design does not constitute a local legal or empirical validation.
+
+OpenAI ChatGPT also assisted in the Part 6 evidence-synthesis implementation, consistency tests and documentation. The researcher must verify the empirical results, interpret the conclusions and disclose this assistance in the final report.
